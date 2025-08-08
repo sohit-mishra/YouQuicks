@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="658" height="134" viewBox="0 0 658 134">
+  <g id="Group_1" data-name="Group 1" transform="translate(-982 -232)">
+    <line id="Line_2" data-name="Line 2" y1="54" x2="51" transform="translate(986 301)" fill="none" stroke="red" stroke-width="11"/>
+    <g id="Rectangle_2" data-name="Rectangle 2" transform="translate(982 250)" fill="none" stroke="#5b5353" stroke-width="25">
+      <rect width="103" height="108" rx="51.5" stroke="none"/>
+      <rect x="12.5" y="12.5" width="78" height="83" rx="39" fill="none"/>
+    </g>
+    <text id="YouQuicks" transform="translate(1099 341)" fill="#505050" font-size="101" font-family="SegoeUI-Bold, Segoe UI" font-weight="700"><tspan x="0" y="0">You</tspan><tspan y="0" fill="#f80000">Quicks</tspan></text>
+    <line id="Line_1" data-name="Line 1" y1="54" x2="51" transform="translate(1034 250)" fill="none" stroke="red" stroke-width="11"/>
+  </g>
+</svg>
