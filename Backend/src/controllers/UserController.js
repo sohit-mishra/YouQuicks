@@ -155,6 +155,7 @@ const premiumUser = async (req, res) => {
   }
 };
 
+
 module.exports = {
   getAllUsers,
   getUserById,

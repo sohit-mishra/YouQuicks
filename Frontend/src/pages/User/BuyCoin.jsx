@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FaCoins } from "react-icons/fa";
 import { Input } from "@/components/ui/input";
@@ -45,6 +45,22 @@ export default function BuyCoin() {
   };
 
   const price = calculatePrice(customCoins);
+
+  useEffect(()=>{
+
+    const fetchData = async()=>{
+      try {
+        const res = await api.get(`${import.meta.env.VITE_API_URL}/api/coin/defaultcoin`);
+        setDefaultCoin(res.data.coin);
+        setCustomCoins(res.data.coin)
+      } catch (error) {
+        showErrorToast("Failed to coin");
+      }
+    }
+
+    fetchData();
+
+  },[])
 
   const handleConfirmPurchase = async (coins, price) => {
     if (coins < defaultCoin) {
@@ -235,7 +251,7 @@ export default function BuyCoin() {
           <AlertDialogTrigger asChild>
             <Button
               className="bg-red-500 text-white hover:bg-red-600 mt-4"
-              disabled={isLoading}
+              disabled={isLoading || defaultCoin > customCoins}
             >
               Buy Now
             </Button>

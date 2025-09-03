@@ -20,8 +20,6 @@ const BlogRoute = require('@/routes/BlogRoute');
 const GraphRoute = require('@/routes/GraphRoute');
 const EmployeeGraphRoute = require('@/routes/EmployeeGraphRoute');
 
-
-
 const app = express();
 const PORT = config.PORT;
 
@@ -36,6 +34,10 @@ app.use(express.json());
 
 app.get('/', (req, res) => {
     res.send("Hello World");
+});
+
+app.get("/health", (req, res) => {
+  res.json({ status: "ok" });
 });
 
 app.use('/api/auth', UserAuthRoutes);
@@ -59,3 +61,5 @@ app.use('/api/coin', CoinRoutes);
 app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);
 });
+
+

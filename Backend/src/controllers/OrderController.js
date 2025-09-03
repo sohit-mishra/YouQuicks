@@ -14,8 +14,9 @@ const createOrder = async (req, res) => {
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ error: "User not found." });
 
-    const coinData = await Coin.findOne(); 
-    if (!coinData) return res.status(400).json({ error: "Coin settings not found." });
+    const coinData = await Coin.findOne();
+    if (!coinData)
+      return res.status(400).json({ error: "Coin settings not found." });
 
     const coinMap = {
       Likes: "likesCoinPay",
@@ -62,7 +63,6 @@ const createOrder = async (req, res) => {
   }
 };
 
-
 const AllOrder = async (req, res) => {
   try {
     const orders = await Order.find({ userId: req.user.userId });
@@ -105,7 +105,6 @@ const DeleteOrder = async (req, res) => {
       return res.status(404).json({ error: "Order not found." });
     }
 
-
     if (deleted.status === "Completed") {
       return res.status(200).json({
         message: "Order deleted and coins refunded successfully.",
@@ -113,7 +112,8 @@ const DeleteOrder = async (req, res) => {
       });
     }
 
-    const refundedCoinsAmount =  deleted.coinUsed - deleted.total * deleted.quantity;
+    const refundedCoinsAmount =
+      deleted.coinUsed - deleted.total * deleted.quantity;
 
     const user = await User.findById(deleted.userId);
     if (!user) {
@@ -137,25 +137,58 @@ const nextOrder = async (req, res) => {
   try {
     const workerId = req.user.userId;
 
-    const existing = await Order.findOne({ status: "In Progress", assignedTo: workerId });
+    const existing = await Order.findOne({
+      status: "In Progress",
+      assignedTo: workerId,
+    });
+
+    const findCoin = await Coin.findOne({});
+
+    let earnpayment;
+
+    if ((existing.orderType = "Subscriber")) {
+      earnpayment = findCoin.subscribersCoinEarn;
+    }
+
+    if ((existing.orderType = "Likes")) {
+      earnpayment = findCoin.likesCoinEarn;
+    }
+
+    if ((existing.orderType = "Comment")) {
+      earnpayment = findCoin.commentsCoinEarn ;
+    }
+
+    if ((existing.orderType = "Watch Minutes")) {
+      earnpayment = findCoin.watchMinutesCoinEarn;
+    }
+
+
+    const existingTask = {
+      _id: existing._id,
+      videoUrl: existing.videoUrl,
+      orderType: existing.orderType,
+      title: existing.title,
+      earnCoin: earnpayment,
+    };
+
     if (existing) {
-      return res.json({ order: existing });
+      return res.json({ order: existingTask });
     }
 
     const next = await Order.findOneAndUpdate(
       {
         status: "Pending",
-        userId: { $ne: workerId },      
-        assignedTo: { $exists: false }  
+        userId: { $ne: workerId },
+        assignedTo: { $exists: false },
       },
       {
         status: "In Progress",
         assignedTo: workerId,
-        startTime: new Date()
+        startTime: new Date(),
       },
       {
         sort: { createdAt: 1 },
-        new: true
+        new: true,
       }
     );
 
@@ -163,15 +196,23 @@ const nextOrder = async (req, res) => {
       return res.status(404).json({ message: "No tasks available" });
     }
 
-    res.json({ order: next });
+    const task = {
+      _id: next._id,
+      videoUrl: next.videoUrl,
+      orderType: next.orderType,
+      title: next.title,
+    };
 
+    console.log(task);
+
+    res.json({ order: task });
   } catch (err) {
     console.error("nextOrder error:", err);
     res.status(500).json({ error: "Server error" });
   }
 };
 
-const AllOrderEmployeeAndAdmin = async(req,res)=>{
+const AllOrderEmployeeAndAdmin = async (req, res) => {
   try {
     const orders = await Order.find();
     res.status(200).json(orders);
@@ -179,7 +220,13 @@ const AllOrderEmployeeAndAdmin = async(req,res)=>{
     console.error(error);
     res.status(500).json({ error: "Failed to fetch orders." });
   }
-}
+};
 
-
-module.exports = { createOrder, AllOrder, updateStatusOrder, DeleteOrder, nextOrder, AllOrderEmployeeAndAdmin };
+module.exports = {
+  createOrder,
+  AllOrder,
+  DeleteOrder,
+  nextOrder,
+  updateStatusOrder,
+  AllOrderEmployeeAndAdmin,
+};

@@ -8,4 +8,5 @@ router.get('/admin/all', authenticateToken, authorizeRoles('ADMIN'), GetAllAdmin
 router.put('/update', authenticateToken, authorizeRoles('ADMIN'), UpdateCoin);
 router.get('/defaultcoin', authenticateToken, authorizeRoles('USER'), getDefaultCoin);
 
+
 module.exports = router;

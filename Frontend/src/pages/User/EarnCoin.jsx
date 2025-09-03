@@ -151,10 +151,10 @@ export default function EarnCoin() {
           {/* Task Types */}
           {(() => {
             const taskMap = {
-              Subscribers: [{ label: "Subscribe to Channel", reward: 75 }],
-              Likes: [{ label: "Like Video", reward: 40 }],
-              Comments: [{ label: "Leave a Comment", reward: 50 }],
-              "Watch Minutes": [{ label: "Watch a Video", reward: 100 }],
+              Subscribers: [{ label: "Subscribe to Channel" }],
+              Likes: [{ label: "Like Video" }],
+              Comments: [{ label: "Leave a Comment" }],
+              "Watch Minutes": [{ label: "Watch a Video"}],
             };
 
             const tasks = taskMap[data.orderType] || [];
@@ -167,7 +167,7 @@ export default function EarnCoin() {
                 <div>
                   <h4 className="font-semibold text-lg">{label}</h4>
                   <span className="text-yellow-500 flex items-center text-sm mt-1">
-                    <FaCoins className="mr-2" /> {reward} coin reward
+                    <FaCoins className="mr-2" /> {data.earnCoin} coin reward
                   </span>
                 </div>
                 <Button

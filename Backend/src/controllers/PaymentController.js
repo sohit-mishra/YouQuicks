@@ -54,12 +54,14 @@ const createStripeSession = async (req, res) => {
 const createRazorpayOrder = async (req, res) => {
   try {
     const { amount, coins } = req.body;
+    console.log(amount,coins)
 
     if (!amount || !coins) {
       return res.status(400).json({ error: "Amount and coins are required" });
     }
 
     const defaultcoins = await Coin.findOne();
+    
 
     if (coins % defaultcoins.defaultCoin !== 0) {
       return res.status(400).json({ error: "Invalid coin quantity." });
@@ -217,7 +219,7 @@ const GetUserById = async (req, res) => {
   try {
     const id = req.user.userId;
 
-    const user = await Payment.find({ userId: id });
+    const user = await Payment.find({ userId: id }).sort({ createdAt: -1 });;
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });

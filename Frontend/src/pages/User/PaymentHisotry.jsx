@@ -11,11 +11,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { FaCoins } from "react-icons/fa";
 import api from "@/api/api";
+import { showErrorToast } from "@/lib/toastUtils";
+import Loader from "@/assets/loading.svg";
 
 export default function PaymentHistory() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [error, setError] = useState(false);
   const [itemsPerPage] = useState(10);
 
   useEffect(() => {
@@ -26,7 +29,8 @@ export default function PaymentHistory() {
         );
         setOrders(res.data);
       } catch (error) {
-        console.error("Payment status fetch error:", error);
+        setError(true);
+        showErrorToast("Payment status fetch error:", error);
       } finally {
         setLoading(false);
       }
@@ -58,7 +62,6 @@ export default function PaymentHistory() {
     }
   };
 
-  // Pagination calculations
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentOrders = orders.slice(indexOfFirstItem, indexOfLastItem);
@@ -71,6 +74,22 @@ export default function PaymentHistory() {
   const handleNext = () => {
     if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
   };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <img
+          src={Loader}
+          alt="Loading..."
+          className="w-full max-w-[480px] h-auto"
+        />
+      </div>
+    );
+  }
+
+  if (error) {
+    return "erorr";
+  }
 
   return (
     <section className="w-full mt-12 px-4 py-6 bg-gray-100">
@@ -127,9 +146,7 @@ export default function PaymentHistory() {
                       Buy <FaCoins className="text-yellow-500" /> {order.coins}{" "}
                       Coins
                     </TableCell>
-                    <TableCell>
-                      ${order.amount?.toFixed(2) || "0.00"}
-                    </TableCell>
+                    <TableCell>${order.amount?.toFixed(2) || "0.00"}</TableCell>
                     <TableCell className={getStatusColor(order.status)}>
                       {order.status
                         ? order.status.charAt(0).toUpperCase() +
@@ -151,7 +168,6 @@ export default function PaymentHistory() {
             </TableBody>
           </Table>
 
-          {/* Pagination controls */}
           {!loading && orders.length > itemsPerPage && (
             <div className="flex justify-between items-center mt-6">
               <Button

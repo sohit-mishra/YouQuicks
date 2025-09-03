@@ -17,7 +17,7 @@ const OrderSchema = new mongoose.Schema(
     },
     orderType: {
       type: String,
-      enum: ["Likes", "Comments", "Subscribers", "Watch Minutes"],
+      enum: ["Likes", "Comment", "Subscriber", "Watch Minutes"],
       required: true,
     },
     title: {
